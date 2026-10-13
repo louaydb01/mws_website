@@ -44,7 +44,7 @@ Les dictionnaires sont typés : si une clé manque dans une langue, la compilati
 
 ## Avant la mise en ligne
 
-1. Remplacer le numéro provisoire `212600000000` dans `lib/site.ts`.
+1. ~~Remplacer le numéro provisoire~~ — fait : WhatsApp, téléphone et e-mail sont renseignés dans `lib/site.ts`.
 2. Renseigner les liens LinkedIn / Instagram / Facebook / TikTok dans `lib/site.ts`.
 3. Harmoniser les horaires : AR/EN indiquent samedi–jeudi, FR/ES lundi–vendredi.
 4. Témoignages, chiffres (+150 clients, 3+ ans, 10+ experts), « Top Agency 2024 » et « +240 % » sont

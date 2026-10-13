@@ -1,13 +1,15 @@
 export const SITE_URL = 'https://www.marketwavesolution.com';
 export const GTM_ID = 'GTM-WKKXF5RF';
 
-// Placeholder contact details carried over from the original site.
-// Replace them here — every link, form and structured-data entry reads from this object.
+// Contact details — every link, form and structured-data entry reads from this object.
+// WhatsApp (Morocco) and phone calls (US line) are two different numbers.
 export const CONTACT = {
-  whatsapp: '212600000000',
-  phoneHref: '+212600000000',
-  phoneDisplay: '+212 6XX-XXXXXX',
-  email: 'contact@mws.ma',
+  whatsapp: '212696202392',
+  waDisplay: '+212 696-202392',
+  phoneHref: '+12513734883',
+  phoneDisplay: '+1 251-373-4883',
+  email: 'admin@marketwavesolution.com',
+  phonePlaceholder: '+212 6 12 34 56 78',
 };
 
 // Social profiles still point to "#" on the original site.

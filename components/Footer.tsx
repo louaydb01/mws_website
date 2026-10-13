@@ -4,6 +4,7 @@ import { CurrentYear } from './CurrentYear';
 import { Icon } from './Icons';
 import { Logo } from './Logo';
 import { NewsletterForm } from './NewsletterForm';
+import { PrivacyPolicy } from './PrivacyPolicy';
 import { Rich } from './Rich';
 
 const SERVICE_LINKS: TextKey[] = ['s1.title', 's2.title', 's3.title', 's4.title'];
@@ -59,7 +60,10 @@ export function Footer({ d }: { d: Dictionary }) {
         </div>
 
         <div className="footer-bottom">
-          <span>© <CurrentYear buildYear={new Date().getFullYear()} /> <span className="red">MarketWave Solution</span> — <span>{d['foot.rights']}</span></span>
+          <div className="footer-legal">
+            <span>© <CurrentYear buildYear={new Date().getFullYear()} /> <span className="red">MarketWave Solution LLC</span> — <span>{d['foot.rights']}</span></span>
+            <PrivacyPolicy />
+          </div>
           <span><Rich text={d['foot.made']} /></span>
         </div>
       </div>

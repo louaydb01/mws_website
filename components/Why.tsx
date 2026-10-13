@@ -1,23 +1,36 @@
 import type { Dictionary, TextKey } from '@/lib/i18n';
-import { SectionHead } from './SectionHead';
+import { vars } from '@/lib/css';
+import { LineIcon, type LineIconName } from './LineIcons';
+import { Rich } from './Rich';
+import { Eyebrow } from './SectionHead';
 
-const PRINCIPLES: Array<[TextKey, TextKey]> = [
-  ['why.w1h', 'why.w1p'],
-  ['why.w2h', 'why.w2p'],
-  ['why.w3h', 'why.w3p'],
-  ['why.w4h', 'why.w4p'],
+const PRINCIPLES: Array<[LineIconName, TextKey, TextKey]> = [
+  ['bars', 'why.w1h', 'why.w1p'],
+  ['file', 'why.w2h', 'why.w2p'],
+  ['users', 'why.w3h', 'why.w3p'],
+  ['headset', 'why.w4h', 'why.w4p'],
 ];
 
 export function Why({ d }: { d: Dictionary }) {
   return (
-    <section className="section section--rule" id="why" aria-labelledby="whyTitle">
+    <section className="section wy" id="why" aria-labelledby="whyTitle">
       <div className="container">
-        <SectionHead id="whyTitle" eyebrow={d['why.label']} title={d['why.title']} lead={d['why.desc']} />
-        <ol className="why-list">
-          {PRINCIPLES.map(([h, p], n) => (
-            <li key={h} className="why-item reveal">
-              <span className="why-num">{String(n + 1).padStart(2, '0')}</span>
-              <div><h3 className="h3">{d[h]}</h3><p>{d[p]}</p></div>
+        <header className="wy-head reveal">
+          <Eyebrow>{d['why.label']}</Eyebrow>
+          <div className="wy-head-row">
+            <h2 className="wy-title" id="whyTitle"><Rich text={d['why.title']} /></h2>
+            <p className="wy-lead">{d['why.desc']}</p>
+          </div>
+        </header>
+        <ol className="wy-grid">
+          {PRINCIPLES.map(([icon, h, p], n) => (
+            <li key={h} className="wy-card reveal" style={vars({ '--d': n % 2 })}>
+              <span className="wy-num">{String(n + 1).padStart(2, '0')}</span>
+              <div className="wy-row">
+                <span className="wy-icon"><LineIcon name={icon} /></span>
+                <div className="wy-text"><h3>{d[h]}</h3><p>{d[p]}</p></div>
+                <a href="#contact-page" className="wy-arrow" aria-label={d['nav.contact']}><LineIcon name="arrow" /></a>
+              </div>
             </li>
           ))}
         </ol>

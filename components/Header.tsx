@@ -3,19 +3,30 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { useI18n } from './I18nProvider';
 import { ArrowIcon, Icon } from './Icons';
+import { LineIcon } from './LineIcons';
 import { Logo } from './Logo';
 import { LANG_STORAGE_KEY, LOCALES, LOCALE_INFO, localePath, type Locale, type TextKey } from '@/lib/i18n';
 import { vars } from '@/lib/css';
 import { waLink } from '@/lib/site';
 
+// Desktop bar follows the Framer design; the mobile menu keeps every section (FAQ included).
 const DESKTOP_NAV: Array<[string, TextKey]> = [
+  ['home-page', 'nav.home'],
+  ['services-page', 'nav.services'],
+  ['portfolio-page', 'nav.portfolio'],
+  ['about-page', 'nav.about'],
+  ['blog-page', 'nav.blog'],
+  ['contact-page', 'nav.contact'],
+];
+const MOBILE_NAV: Array<[string, TextKey]> = [
+  ['home-page', 'nav.home'],
   ['services-page', 'nav.services'],
   ['about-page', 'nav.about'],
   ['portfolio-page', 'nav.portfolio'],
   ['blog-page', 'nav.blog'],
   ['faq-page', 'nav.faq'],
+  ['contact-page', 'nav.contact'],
 ];
-const MOBILE_NAV: Array<[string, TextKey]> = [['home-page', 'nav.home'], ...DESKTOP_NAV, ['contact-page', 'nav.contact']];
 
 // Each language is its own statically generated page; keep the current section when switching.
 function LangLink({ to, className, children }: { to: Locale; className: string; children: ReactNode }) {
@@ -60,7 +71,7 @@ export function Header() {
     let ticking = false;
     const update = () => { setScrolled(window.scrollY > 8); ticking = false; };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-    const onResize = () => { if (window.innerWidth >= 1024) setNavOpen(false); };
+    const onResize = () => { if (window.innerWidth >= 1200) setNavOpen(false); };
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
@@ -126,7 +137,7 @@ export function Header() {
             </div>
             <button type="button" className="lang-trigger" aria-haspopup="dialog" aria-controls="langModal"
               aria-label={d['lang.choose']} onClick={openLang}>
-              <Icon name="globe" /><span>{LOCALE_INFO[lang].code}</span>
+              <Icon name="globe" /><span>{LOCALE_INFO[lang].code}</span><LineIcon name="chevron" />
             </button>
             <a href="#contact-page" className="btn btn-primary btn-sm nav-cta"><span>{d['nav.cta']}</span><ArrowIcon /></a>
             <button type="button" className="menu-btn" ref={menuBtnRef} aria-expanded={navOpen} aria-controls="mobileNav"

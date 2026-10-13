@@ -16,6 +16,7 @@ import { Portfolio } from './Portfolio';
 import { Process } from './Process';
 import { ServicesDetail } from './ServicesDetail';
 import { Testimonials } from './Testimonials';
+import { Ticker } from './Ticker';
 import { WhatsAppButton } from './WhatsAppButton';
 import { Why } from './Why';
 
@@ -33,9 +34,13 @@ export function HomePage({ lang }: { lang: Locale }) {
       <main id="main">
         <div id="home-page" className="page-section">
           <Hero d={d} />
+          <Ticker d={d} />
           <Expertises d={d} />
-          <Why d={d} />
-          <Process d={d} />
+          {/* One shared background so the arcs flow from "Why" into "Process" */}
+          <div className="wp-band">
+            <Why d={d} />
+            <Process d={d} />
+          </div>
           <Testimonials d={d} />
         </div>
         <div id="services-page" className="page-section"><ServicesDetail d={d} /></div>

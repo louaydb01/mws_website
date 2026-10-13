@@ -15,7 +15,8 @@ declare global {
 export function Contact() {
   const { lang, d } = useI18n();
   const [status, setStatus] = useState('');
-  const [service, ...services] = d['con.srvOpts'];
+  const [srvError, setSrvError] = useState(false);
+  const services = d['con.srvOpts'].slice(1); // first entry is the old placeholder
 
   // No form backend: the message is composed and opened in WhatsApp (same as the original newsletter).
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -23,6 +24,9 @@ export function Contact() {
     const form = e.currentTarget;
     if (!form.reportValidity()) return;
     const data = new FormData(form);
+    const chosen = data.getAll('service').map(String);
+    if (chosen.length === 0) { setSrvError(true); form.querySelector<HTMLInputElement>('input[name="service"]')?.focus(); return; }
+    setSrvError(false);
     const label = (key: TextKey) => d[key].replace(/\s*\*$/, '');
     const lines = [
       d['con.waHead'], '',
@@ -30,14 +34,15 @@ export function Contact() {
       `${label('con.phone')}: ${data.get('phone')}`,
     ];
     if (data.get('email')) lines.push(`${label('con.emailL')}: ${data.get('email')}`);
-    lines.push(`${label('con.service')}: ${data.get('service')}`);
+    lines.push(`${label('con.service')}: ${chosen.join(', ')}`);
     const message = String(data.get('message') ?? '').trim();
     if (message) lines.push('', message);
 
-    (window.dataLayer = window.dataLayer || []).push({ event: 'mws_contact_submit', mws_service: data.get('service'), mws_lang: lang });
+    (window.dataLayer = window.dataLayer || []).push({ event: 'mws_contact_submit', mws_service: chosen.join(', '), mws_lang: lang });
     openWhatsApp(lines.join('\n'));
     setStatus(d['con.ok']);
     form.reset();
+    setSrvError(false);
   };
 
   return (
@@ -53,7 +58,7 @@ export function Contact() {
               <li>
                 <a href={waLink()} target="_blank" rel="noopener" className="contact-item">
                   <span className="contact-icon"><Icon name="wa" /></span>
-                  <span><span className="contact-label">{d['con.wa']}</span><span className="contact-val" dir="ltr">{CONTACT.phoneDisplay}</span></span>
+                  <span><span className="contact-label">{d['con.wa']}</span><span className="contact-val" dir="ltr">{CONTACT.waDisplay}</span></span>
                   <Icon name="arrow-up" className="i-flip" />
                 </a>
               </li>
@@ -92,20 +97,25 @@ export function Contact() {
               </div>
               <div className="field">
                 <label htmlFor="cfPhone">{d['con.phone']}</label>
-                <input type="tel" className="form-control" id="cfPhone" name="phone" autoComplete="tel" required placeholder={CONTACT.phoneDisplay} />
+                <input type="tel" className="form-control" id="cfPhone" name="phone" autoComplete="tel" required placeholder={CONTACT.phonePlaceholder} />
               </div>
             </div>
             <div className="field">
               <label htmlFor="cfEmail">{d['con.emailL']}</label>
               <input type="email" className="form-control" id="cfEmail" name="email" autoComplete="email" placeholder="email@example.com" />
             </div>
-            <div className="field">
-              <label htmlFor="cfService">{d['con.service']}</label>
-              <select className="form-control" id="cfService" name="service" required defaultValue="">
-                <option value="" disabled>{service}</option>
-                {services.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
+            <fieldset className="field srv-field" aria-describedby={srvError ? 'cfSrvErr' : undefined}>
+              <legend>{d['con.service']} <span className="srv-hint">{d['con.srvHint']}</span></legend>
+              <div className="srv-chips">
+                {services.map(s => (
+                  <label key={s} className="srv-chip">
+                    <input type="checkbox" name="service" value={s} onChange={() => setSrvError(false)} />
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>{s}</span>
+                  </label>
+                ))}
+              </div>
+              {srvError && <p className="srv-error" id="cfSrvErr" role="alert">{d['con.srvErr']}</p>}
+            </fieldset>
             <div className="field">
               <label htmlFor="cfMsg">{d['con.msg']}</label>
               <textarea className="form-control" id="cfMsg" name="message" placeholder={d['con.msgPH']} />
